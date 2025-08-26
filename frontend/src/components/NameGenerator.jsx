@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from './ui/textarea';
 import { Copy, RefreshCw, Sparkles, Zap } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
-import { getMockNames } from '../utils/mock';
+import axios from 'axios';
 
 const NameGenerator = () => {
   const [description, setDescription] = useState('');
