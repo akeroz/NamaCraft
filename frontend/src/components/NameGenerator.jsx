@@ -28,17 +28,51 @@ const NameGenerator = () => {
 
     setIsGenerating(true);
     
-    // Simulate API delay
-    setTimeout(() => {
-      const mockNames = getMockNames(description, industry, style);
-      setGeneratedNames(mockNames);
-      setIsGenerating(false);
+    try {
+      const requestBody = {
+        description: description.trim(),
+        count: 12
+      };
+      
+      // Ajouter les paramètres optionnels seulement s'ils sont sélectionnés
+      if (industry) requestBody.industry = industry;
+      if (style) requestBody.style = style;
+      
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/generate-names`,
+        requestBody,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      const { names } = response.data;
+      setGeneratedNames(names);
       
       toast({
-        title: "Noms générés !",
-        description: `${mockNames.length} noms créés pour votre projet.`,
+        title: "Noms générés avec IA !",
+        description: `${names.length} noms créés pour votre projet.`,
       });
-    }, 2000);
+      
+    } catch (error) {
+      console.error('Erreur génération:', error);
+      
+      toast({
+        title: "Erreur de génération",
+        description: "Impossible de générer les noms. Veuillez réessayer.",
+        variant: "destructive"
+      });
+      
+      // En cas d'erreur, fallback vers des noms de base
+      setGeneratedNames([
+        "Qlix", "Vexo", "Nexu", "Ryze", "Flux", "Zura", 
+        "Kliq", "Onyx", "Apex", "Prox", "Echo", "Nova"
+      ]);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const copyToClipboard = (name) => {
