@@ -83,9 +83,9 @@ const NameGenerator = () => {
     });
   };
 
-  const regenerate = () => {
+  const regenerate = async () => {
     if (description.trim()) {
-      handleGenerate();
+      await handleGenerate();
     }
   };
 
